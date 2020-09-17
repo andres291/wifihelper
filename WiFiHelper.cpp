@@ -58,22 +58,18 @@ void WiFiHelper::tryToConnect(){
         Serial.print("IP address: ");
         Serial.println(WiFi.localIP());
         Serial.println("");
+
+        MDNS.end();
+        if(!MDNS.begin(Hostname.c_str())) {
+          Serial.println("Error starting mDNS");
+          return;
+        }
+        MDNS.addService("_http", "_tcp", 80);
+        Serial.println("MDNS.addService('_http', '_tcp', 80)");
       }
 
       vTaskDelay (5000); // Check again in about 5s
     }
-
-    // unsigned long currentMillis = millis();
-    // if (currentMillis - previousMillis > interval) {
-    //   previousMillis = currentMillis;
-      MDNS.end();
-      if(!MDNS.begin(Hostname.c_str())) {
-        Serial.println("Error starting mDNS");
-        return;
-      }
-      MDNS.addService("_http", "_tcp", 80);
-    // }
-
 }
 
 void WiFiHelper::firstConnect(){
